@@ -1,4 +1,4 @@
-import { pairPoints } from "./hands"
+import { pairPoints, runPoints } from "./hands"
 
 describe("hand calculations", () => {
   describe("pairPoints", () => {
@@ -34,6 +34,22 @@ describe("hand calculations", () => {
       const cards = "Q Q K K K".split(" ")
       const actual = pairPoints(cards)
       const expected = 8
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe("runPoints", () => {
+    it("counts 5 for a run of 5", () => {
+      const cards = "8 6 7 5 9".split(" ")
+      const actual = runPoints(cards)
+      const expected = 5
+      expect(actual).toEqual(expected)
+    })
+
+    xit("counts 4 for a run of 4", () => {
+      const cards = "2 6 7 5 9".split(" ")
+      const actual = runPoints(cards)
+      const expected = 4
       expect(actual).toEqual(expected)
     })
   })
