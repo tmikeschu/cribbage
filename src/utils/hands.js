@@ -1,14 +1,21 @@
 import {
   __,
   add,
+  addIndex,
+  concat,
   countBy,
   divide,
   equals,
   filter,
+  find,
   identity,
+  length,
   map,
   multiply,
   pipe,
+  reduce,
+  slice,
+  sort,
   subtract,
   sum,
   uncurryN,
@@ -31,21 +38,28 @@ export const pairPoints = cards =>
     sum,
   )(cards)
 
-const sequenceSum = ([x, y]) =>
-  pipe(
-    add(1),
-    multiply(y),
-    divide(__, 2),
-    subtract(__, pipe(subtract(__, 1), multiply(x), divide(__, 2))(x)),
-  )(y)
-
-const minMax = set => [MIN(set), MAX(set)]
-const isRun = cards =>
-  pipe(minMax, sequenceSum, subtract(__, sum(cards)), equals(0))(cards)
+const nextDiff = (a, i, o) => subtract(a, o[add(i, 1)])
+const chunk = predicate => (acc, el) => {
+  if (predicate(el)) {
+    return [
+      slice(0, subtract(length(acc), 1), acc),
+      concat([el], acc[subtract(length(acc), 1)]),
+    ]
+  }
+  return [...acc, []]
+}
+const groupRuns = chunk(equals(-1))
 
 export const runPoints = cards => {
-  const sorted = cards.slice(0).sort((a, b) => a - b)
-  if (isRun(sorted)) {
-    return sorted.length
-  }
+  return (
+    pipe(
+      sort(subtract),
+      addIndex(map)(nextDiff),
+      filter(identity),
+      reduce(groupRuns, [[]]),
+      map(length),
+      find(greaterThanOne),
+      add(1),
+    )(cards) || 0
+  )
 }
