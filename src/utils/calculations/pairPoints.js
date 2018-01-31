@@ -9,9 +9,8 @@ import {
   values,
 } from "ramda"
 import { combinations } from "mathjs"
+import { greaterThanOne } from "./utils"
 
-const greaterThan = x => y => y > x
-const greaterThanOne = greaterThan(1)
 const pairCombinations = x => combinations(x, 2)
 const double = multiply(2)
 

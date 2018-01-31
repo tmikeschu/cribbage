@@ -1,4 +1,5 @@
 export const greaterThan = x => y => y > x
+export const greaterThanOne = greaterThan(1)
 
 export const kCombinations = (set, k) => {
   let i, j, combs, head, tailcombs

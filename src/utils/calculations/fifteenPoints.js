@@ -1,5 +1,8 @@
 import {
+  __,
+  curry,
   concat,
+  equals,
   filter,
   length,
   map,
@@ -14,13 +17,15 @@ import { kCombinations } from "./utils"
 const combinationKs = [2, 3, 4, 5]
 
 const mapNumber = collection => map(Number, collection)
-const getCombinations = (cards, k) => kCombinations(mapNumber(cards), k)
+const getCombinations = ([cards, k]) =>
+  pipe(mapNumber, curry(kCombinations)(__, k))(cards)
+
 const combinationsReducer = cards => [
-  (acc, k) => acc.concat(getCombinations(cards, k)),
+  (acc, k) => pipe(getCombinations, concat(acc))([cards, k]),
   [],
 ]
 
-const sumFifteen = set => sum(set) === 15
+const sumFifteen = set => equals(sum(set), 15)
 
 const fifteenPoints = cards =>
   pipe(

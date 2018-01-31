@@ -13,31 +13,26 @@ import {
   slice,
   sort,
   subtract,
-  values,
 } from "ramda"
-
-const greaterThan = x => y => y > x
-const greaterThanOne = greaterThan(1)
+import { greaterThanOne } from "./utils"
 
 const nextDiff = (a, i, o) => subtract(a, o[add(i, 1)])
 
 const chunk = predicate => (acc, el) => {
   if (predicate(el)) {
-    return [
-      slice(0, subtract(length(acc), 1), acc),
-      concat([el], acc[subtract(length(acc), 1)]),
-    ]
+    const lastIndex = subtract(length(acc), 1)
+    return [slice(0, lastIndex, acc), concat([el], acc[lastIndex])]
   }
   return [...acc, []]
 }
-const groupRuns = chunk(equals(-1))
+const groupRuns = [chunk(equals(-1)), [[]]]
 
 const runPoints = cards =>
   pipe(
     sort(subtract),
     addIndex(map)(nextDiff),
     filter(identity),
-    reduce(groupRuns, [[]]),
+    reduce(...groupRuns),
     map(length),
     find(greaterThanOne),
     add(1),
